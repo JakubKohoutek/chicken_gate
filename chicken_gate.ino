@@ -5,6 +5,12 @@
 #include <Wire.h>
 #include <RtcDS3231.h>
 
+#include <WiFiManager.h>
+#include <DNSServer.h>
+#include <ESP8266WebServer.h>
+
+// https://github.com/tzapu/WiFiManager/blob/master/examples/OnDemandConfigPortal/OnDemandConfigPortal.ino
+
 #include "config.h"
 #include "melody.h"
 
