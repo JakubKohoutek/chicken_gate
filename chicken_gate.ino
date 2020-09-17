@@ -1,18 +1,10 @@
-#include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
-#include <WiFiClientSecure.h>
 #include <Servo.h>
 #include <Wire.h>
 #include <RtcDS3231.h>
 
-#include <WiFiManager.h>
-#include <DNSServer.h>
-#include <ESP8266WebServer.h>
-
-// https://github.com/tzapu/WiFiManager/blob/master/examples/OnDemandConfigPortal/OnDemandConfigPortal.ino
-
 #include "config.h"
 #include "melody.h"
+#include "server.h"
 
 #define LED_PIN          2
 #define SLEEP_TIME       3*60*60e6 // the highest sleep period that works reliably
@@ -74,6 +66,7 @@ void setup () {
           DS3231AlarmTwoControl_HoursMinutesMatch);
   Rtc.SetAlarmTwo(alarm2);
   // ESP.deepSleep(SLEEP_TIME);
+  startServer();
 }
 
 float readVoltage () {
@@ -103,7 +96,7 @@ void loop () {
 
   if (flag & DS3231AlarmFlag_Alarm1) {
     Serial.println("alarm one triggered");
-    playMelody(BUZZER_PIN);
+    // playMelody(BUZZER_PIN);
   }
   if (flag & DS3231AlarmFlag_Alarm2) {
     Serial.println("alarm two triggered");
