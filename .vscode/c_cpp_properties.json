@@ -41,6 +41,7 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\Dell\\Documents\\Arduino\\libraries\\**",
                 "C:\\Users\\Dell\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
                 "C:\\Users\\Dell\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.6.3\\**"
             ],
