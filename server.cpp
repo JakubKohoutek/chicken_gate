@@ -1,4 +1,5 @@
 #include "server.h"
+#include "rtc.h"
 
 const char *apName = "chicken-gate"; // Try http://esp8266.local
 
@@ -9,6 +10,8 @@ DNSServer dnsServer;
 // Web server
 ESP8266WebServer server(80);
 
+static boolean setupMode = true;
+
 void handleRoot () {
   Serial.println("Handle root");
 
@@ -17,27 +20,87 @@ void handleRoot () {
     return;
   }
 
-  String page = HTTP_HEADER;
-  page += HTTP_SCRIPT;
-  page += HTTP_STYLE;
-  page += HTTP_HEADER_END;
-  page += String("<h1>Chicken Gate</h1>");
-  page += HTTP_END;
+  String page = ROOT_PAGE;
 
   server.sendHeader("Content-Length", String(page.length()));
   server.send(200, "text/html", page);
 }
 
-void handleSave() {
-  // for (uint8_t i = 0; i < server.args(); i++) {
-  //   if (server.argName(i) == "code") {
-  //     String commmand = server.arg(i);
-  //     uint32_t code = translateCommandToCode(commmand);
-  //     irsend.sendNEC(code, 32);
-  //     String json = "{\"command\":\"" + commmand + "\", \"code\":\"" + code + "\"}";
-  //     server.send(200, "application/json", json.c_str());
-  //   }
-  // }
+void handleUpdateTime () {
+  char date[12] = {0};
+  char time[9] = {0};
+
+  for (uint8_t i = 0; i < server.args(); i++) {
+    if (server.argName(i) == "date") {
+      strcpy(date, server.arg(i).c_str());
+    }
+    if (server.argName(i) == "time") {
+      strcpy(time, server.arg(i).c_str());
+    }
+  }
+
+  RtcDateTime newDate = RtcDateTime(date, time);
+  Rtc.SetDateTime(newDate);
+
+  Serial.println("New date set:");
+  Serial.println(date);
+  Serial.println(time);
+
+  server.send(200, "text/plain", "Success");
+}
+
+
+void handleSetTimer () {
+  char date[12] = {0};
+  char time[9] = {0};
+  String mode;
+
+  for (uint8_t i = 0; i < server.args(); i++) {
+    if (server.argName(i) == "date") {
+      strcpy(date, server.arg(i).c_str());
+    }
+    if (server.argName(i) == "time") {
+      strcpy(time, server.arg(i).c_str());
+    }
+    if (server.argName(i) == "mode") {
+      mode = server.arg(i);
+    }
+  }
+
+  Serial.println(mode);
+  RtcDateTime alarmTime = RtcDateTime(date, time);
+
+  if (mode == "timerOne") {
+    DS3231AlarmOne alarm1(
+      alarmTime.Day(),
+      alarmTime.Hour(),
+      alarmTime.Minute(), 
+      alarmTime.Second(),
+      DS3231AlarmOneControl_HoursMinutesSecondsMatch
+    );
+    Rtc.SetAlarmOne(alarm1);
+    Serial.println("New alarm 1 set:");
+  }
+
+  if (mode == "timerTwo") {
+    DS3231AlarmTwo alarm2(
+      alarmTime.Day(),
+      alarmTime.Hour(),
+      alarmTime.Minute(), 
+      DS3231AlarmTwoControl_HoursMinutesMatch
+    );
+    Rtc.SetAlarmTwo(alarm2);
+    Serial.println("New alarm 2 set:");
+  }
+  Serial.println(date);
+  Serial.println(time);
+
+  server.send(200, "text/plain", "Success");
+}
+
+void handleDone () {
+  server.send(200, "text/plain", "Success");
+  setupMode = false;
 }
 
 void handleNotFound () {
@@ -59,12 +122,15 @@ void startServer () {
   dnsServer.start(DNS_PORT, "*", WiFi.softAPIP());
 
   server.on("/", handleRoot);
+  server.on("/updateTime", handleUpdateTime);
+  server.on("/setTimer", handleSetTimer);
+  server.on("/done", handleDone);
   server.onNotFound(handleNotFound);
   server.begin();
 
   Serial.println("HTTP server started");
 
-  while (true){
+  while (setupMode) {
     dnsServer.processNextRequest();
     server.handleClient();
   }
