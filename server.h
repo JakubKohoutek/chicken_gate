@@ -10,18 +10,24 @@
 
 #include "index.h"
 
-void    handleRoot      ();
+void    handleRoot        ();
 
-void    handleSave      ();
+void    handleNotFound    ();
 
-void    handleNotFound  ();
+void    handleUpdateTime  ();
 
-void    startServer     ();
+void    handleSetTimer    ();
 
-boolean captivePortal   ();
+void    handleDone        ();
 
-boolean isIp            (String str);
+void    handleReadVoltage ();
 
-String  toStringIp      (IPAddress ip);
+void    startServer       ();
+
+boolean captivePortal     ();
+
+boolean isIp              (String str);
+
+String  toStringIp        (IPAddress ip);
 
 #endif // SERVER_H

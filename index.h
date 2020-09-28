@@ -95,15 +95,33 @@ const char ROOT_PAGE[] = R"=====(
             status.innerText = `${error.message}`;
           })
       }
+
+      function readVoltage () {
+        fetch(`/readVoltage`)
+          .then(function(response){
+            return response.json();
+          })
+          .then(function(result) {
+            const element = document.getElementById(`voltage`);
+            element.innerText = result.voltage;
+          })
+          .catch(function(error) {
+            status.innerText = `${error.message}`;
+          })
+      }
+
+      window.onload = function(event) {
+        readVoltage();
+      };
     </script>
   </head>
   <body>
     <div style="text-align:left; display:inline-block; min-width:260px;">
       <h1>Chicken Gate</h1>
 
-      <h2>Update Time</h2>
+      <h2>Time</h2>
       <button onclick="updateTime()" id="updateTimeButton">Update time</button>
-      <h2>Set Timers</h2>
+      <h2>Timers</h2>
       <input type="time" name="timer_one" id="timerOne" />
       <button onclick="setTimer(`timerOne`)" id="timerOneButton">Set Open Time</button>
       <br/>
@@ -111,6 +129,8 @@ const char ROOT_PAGE[] = R"=====(
       <button onclick="setTimer(`timerTwo`)" id="timerTwoButton">Set Close Time</button>
       <button onclick="finish()" id="finishButton">Finish</button>
       <div id="status" />
+      <h2>Voltage</h2>
+      <div id="voltage" />
     </div>
   </body>
 </html>

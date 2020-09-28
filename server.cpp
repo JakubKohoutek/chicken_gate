@@ -1,5 +1,6 @@
 #include "server.h"
 #include "rtc.h"
+#include "voltage.h"
 
 const char *apName = "chicken-gate"; // Try http://esp8266.local
 
@@ -103,6 +104,17 @@ void handleDone () {
   setupMode = false;
 }
 
+void handleReadVoltage () {
+  float voltage = readVoltage();
+  char voltageString[10];
+  sprintf(voltageString, "%.2fV", voltage);
+
+  String payload = String("{") +
+    "\"voltage\":\"" + voltageString + "\"" +
+  "}";
+  server.send(200, "application/json", payload);
+}
+
 void handleNotFound () {
   // If caprive portal, redirect instead of displaying the page
   if (captivePortal()) {
@@ -124,6 +136,7 @@ void startServer () {
   server.on("/", handleRoot);
   server.on("/updateTime", handleUpdateTime);
   server.on("/setTimer", handleSetTimer);
+  server.on("/readVoltage", handleReadVoltage);
   server.on("/done", handleDone);
   server.onNotFound(handleNotFound);
   server.begin();
