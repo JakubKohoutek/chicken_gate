@@ -110,8 +110,23 @@ const char ROOT_PAGE[] = R"=====(
           })
       }
 
+      function readTime () {
+        fetch(`/readTime`)
+          .then(function(response){
+            return response.json();
+          })
+          .then(function(result) {
+            const element = document.getElementById(`time`);
+            element.innerText = result.time;
+          })
+          .catch(function(error) {
+            console.log(error);
+          })
+      }
+
       window.onload = function(event) {
         readVoltage();
+        setInterval(readTime, 1000);
       };
     </script>
   </head>
@@ -120,6 +135,7 @@ const char ROOT_PAGE[] = R"=====(
       <h1>Chicken Gate</h1>
 
       <h2>Time</h2>
+      <div id="time">Loading...</div>
       <button onclick="updateTime()" id="updateTimeButton">Update time</button>
       <h2>Timers</h2>
       <input type="time" name="timer_one" id="timerOne" />
@@ -130,7 +146,7 @@ const char ROOT_PAGE[] = R"=====(
       <button onclick="finish()" id="finishButton">Finish</button>
       <div id="status" />
       <h2>Voltage</h2>
-      <div id="voltage" />
+      <div id="voltage">Loading...</div>
     </div>
   </body>
 </html>

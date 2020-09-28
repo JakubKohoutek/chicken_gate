@@ -115,6 +115,19 @@ void handleReadVoltage () {
   server.send(200, "application/json", payload);
 }
 
+void handleReadTime () {
+  RtcDateTime now = Rtc.GetDateTime();
+
+  String timeString = String("") +
+    "Date:" + now.Year() + '/' + now.Month() + '/' + now.Day() + " " +
+    "Time:" + now.Hour() + ':' + now.Minute() + ':' + now.Second();
+  String payload = String("{") +
+    "\"time\":\"" + timeString + "\"" +
+  "}";
+
+  server.send(200, "application/json", payload);
+}
+
 void handleNotFound () {
   // If caprive portal, redirect instead of displaying the page
   if (captivePortal()) {
@@ -137,6 +150,7 @@ void startServer () {
   server.on("/updateTime", handleUpdateTime);
   server.on("/setTimer", handleSetTimer);
   server.on("/readVoltage", handleReadVoltage);
+  server.on("/readTime", handleReadTime);
   server.on("/done", handleDone);
   server.onNotFound(handleNotFound);
   server.begin();

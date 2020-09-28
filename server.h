@@ -22,6 +22,8 @@ void    handleDone        ();
 
 void    handleReadVoltage ();
 
+void    handleReadTime    ();
+
 void    startServer       ();
 
 boolean captivePortal     ();
