@@ -1,10 +1,9 @@
-#include <Servo.h>
-
 #include "config.h"
 #include "melody.h"
 #include "rtc.h"
 #include "server.h"
 #include "voltage.h"
+#include "motor.h"
 
 // Define pins
 #define LED_PIN          2
@@ -17,8 +16,9 @@ void setup () {
 
   digitalWrite(LED_PIN, LOW);
 
-  Serial.begin(115200);
+  // Serial.begin(115200);
 
+  // NOTE - RTC will occupy pin 0 once initiated, we must count with that
   initiateRtc();
 
   DS3231AlarmFlag flag = Rtc.LatchAlarmsTriggeredFlags();
@@ -26,12 +26,14 @@ void setup () {
   if (flag & DS3231AlarmFlag_Alarm1) {
     Serial.println("alarm one triggered");
     playMelody(melodyBeep, melodyBeepLength);
+    openGate();
   }
 
   if (flag & DS3231AlarmFlag_Alarm2) {
     Serial.println("alarm two triggered");
     playMelody(melodyBeep, melodyBeepLength);
     playMelody(melodyBeep, melodyBeepLength);
+    closeGate();
   }
 
   delay(500);
@@ -45,7 +47,6 @@ void setup () {
   }
 
   Serial.println("Going to sleep...");
-  playMelody(melodyDown, melodyDownLength);
   digitalWrite(LED_PIN, HIGH);
   ESP.deepSleep(0);
 }
