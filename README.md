@@ -29,3 +29,11 @@ Current draw of the board and supplemental circuit in the deep sleep mode is abo
 ## The Finished Product
 
 TBD
+
+## TODO
+
+* Update circuit diagram
+* Pre-fill timers in captive portal
+* Timeout for wifi connection - long time of inactivity
+* Persist information about open/closed gate
+* Add sensors for open/close gate and do proper action
