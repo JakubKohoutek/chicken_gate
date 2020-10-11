@@ -12,5 +12,14 @@
   ],
   "arduino.defaultBaudRate": 115200,
   "C_Cpp.intelliSenseEngineFallback": "Enabled",
-  "C_Cpp.intelliSenseEngine": "Tag Parser"
+  "C_Cpp.intelliSenseEngine": "Tag Parser",
+  "files.associations": {
+    "array": "cpp",
+    "deque": "cpp",
+    "list": "cpp",
+    "string": "cpp",
+    "unordered_map": "cpp",
+    "vector": "cpp",
+    "initializer_list": "cpp"
+  }
 }
