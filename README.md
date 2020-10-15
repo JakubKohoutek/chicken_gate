@@ -1,7 +1,7 @@
 # Chicken Gate
 
 This repository contains circuit diagram and code for low power chicken door using
-ESP-8266 (ESP-12) and RTC module.
+ESP-8266 (ESP-12) and DS3231 RTC module.
 
 ## Description
 
@@ -10,7 +10,7 @@ given time in the morning and close in the given time in the evening.
 
 ## Circuit Diagram
 
-![](circuit_diagram/image.png)
+![](circuit_diagram/diagram_image.png)
 
 ## Compilation and Upload Configuration
 

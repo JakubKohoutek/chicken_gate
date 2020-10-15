@@ -26,6 +26,7 @@ const char ROOT_PAGE[] = R"=====(
         line-height: 2.4rem;
         font-size: 1.2rem;
         width: 100%;
+        margin: 3px;
       }
       button:disabled {
         background-color: grey !important;
@@ -45,6 +46,23 @@ const char ROOT_PAGE[] = R"=====(
       function addLeadingSpace (number) {
         return (number < 10) ? ` ${number}` : `${number}`; 
       };
+
+      function sendCommand(command) {
+        const button = document.getElementById(`${command}Button`);
+        const originalText = button.innerText;
+
+        button.disabled = true;
+        button.innerText = 'Working...';
+
+        fetch(`/${command}`)
+          .catch(function(error) {
+            document.getElementById('status').innerText = `${error.message}`;
+          })
+          .finally(function() {
+            button.disabled = false;
+            button.innerText = originalText;
+          });
+      }
 
       function updateTime () {
         const now = new Date();
@@ -143,6 +161,9 @@ const char ROOT_PAGE[] = R"=====(
       <br/>
       <input type="time" name="timer_two" id="timerTwo" />
       <button onclick="setTimer(`timerTwo`)" id="timerTwoButton">Set Close Time</button>
+      <h2>Actions</h2>
+      <button onclick="sendCommand(`open`)" id="openButton">Open now</button>
+      <button onclick="sendCommand(`close`)" id="closeButton">Close now</button>
       <button onclick="finish()" id="finishButton">Finish</button>
       <div id="status" />
       <h2>Voltage</h2>

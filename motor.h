@@ -7,6 +7,10 @@
 #define STEPPER_PIN_3         12
 #define STEPPER_PIN_4         16
 
+#define STATE_ADDRESS         0
+#define CLOSE                 0
+#define OPEN                  1
+
 void powerUpMotor ();
 
 void powerDownMotor ();

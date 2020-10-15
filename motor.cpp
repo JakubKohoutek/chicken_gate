@@ -2,6 +2,8 @@
 
 #include "Arduino.h"
 #include "motor.h"
+#include "melody.h"
+#include "memory.h"
 
 // 2036 is one full turn. Must be divisible by 4 as the motor is 4 step
 #define ONE_TURN    2036
@@ -10,7 +12,7 @@
 #define SPEED       8
 
 // Number of steps required to fully open or close gate
-#define STEPS_COUNT 7000
+#define STEPS_COUNT 8300
 
 Stepper stepper = Stepper(ONE_TURN, STEPPER_PIN_1, STEPPER_PIN_2, STEPPER_PIN_3, STEPPER_PIN_4);
 
@@ -33,6 +35,10 @@ void powerDownMotor () {
 }
 
 void openGate () {
+  if(readFromMemory(STATE_ADDRESS) == OPEN) {
+    return;
+  }
+  playMelody(melodyUp, melodyUpLength);
   powerUpMotor();
   int count = 0;
   while (count < STEPS_COUNT) {
@@ -42,9 +48,14 @@ void openGate () {
     yield();
   }
   powerDownMotor();
+  writeToMemory(STATE_ADDRESS, OPEN);
 };
 
 void closeGate () {
+  if(readFromMemory(STATE_ADDRESS) == CLOSE) {
+    return;
+  }
+  playMelody(melodyDown, melodyDownLength);
   powerUpMotor();
   int count = 0;
   while (count < STEPS_COUNT) {
@@ -54,4 +65,5 @@ void closeGate () {
     yield();
   }
   powerDownMotor();
+  writeToMemory(STATE_ADDRESS, CLOSE);
 };

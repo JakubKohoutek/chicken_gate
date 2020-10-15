@@ -4,6 +4,7 @@
 #include "server.h"
 #include "voltage.h"
 #include "motor.h"
+#include "memory.h"
 
 // Define pins
 #define LED_PIN          2
@@ -16,6 +17,9 @@ void setup () {
 
   digitalWrite(LED_PIN, LOW);
 
+  initiateMemory();
+
+  // NOTE: enabling serial will occupy TX (GPIO 1) and RX (GPIO 3) ports that can't be used then
   // Serial.begin(115200);
 
   // NOTE - RTC will occupy pin 0 once initiated, we must count with that
@@ -24,15 +28,10 @@ void setup () {
   DS3231AlarmFlag flag = Rtc.LatchAlarmsTriggeredFlags();
 
   if (flag & DS3231AlarmFlag_Alarm1) {
-    Serial.println("alarm one triggered");
-    playMelody(melodyBeep, melodyBeepLength);
     openGate();
   }
 
   if (flag & DS3231AlarmFlag_Alarm2) {
-    Serial.println("alarm two triggered");
-    playMelody(melodyBeep, melodyBeepLength);
-    playMelody(melodyBeep, melodyBeepLength);
     closeGate();
   }
 
@@ -41,12 +40,15 @@ void setup () {
   if (digitalRead(BUTTON_PIN) == HIGH) {
     delay(1500);
     if (digitalRead(BUTTON_PIN) == HIGH) {
-      playMelody(melodyUp, melodyUpLength);
+      playMelody(melodyBeep, melodyBeepLength);
       startServer();
     }
+  } else if (readFromMemory(STATE_ADDRESS) == CLOSE) {
+    openGate();
+  } else if (readFromMemory(STATE_ADDRESS) == OPEN) {
+    closeGate();
   }
 
-  Serial.println("Going to sleep...");
   digitalWrite(LED_PIN, HIGH);
   ESP.deepSleep(0);
 }
