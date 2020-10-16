@@ -3,6 +3,8 @@
 #include "voltage.h"
 #include "motor.h"
 
+#define SERVER_TIMEOUT 5 * 60        // seconds
+
 const char *apName = "chicken-gate"; // Try http://esp8266.local
 
 // DNS server
@@ -157,22 +159,29 @@ void startServer () {
   dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
   dnsServer.start(DNS_PORT, "*", WiFi.softAPIP());
 
-  server.on("/", handleRoot);
-  server.on("/updateTime", handleUpdateTime);
-  server.on("/setTimer", handleSetTimer);
+  server.on("/",            handleRoot);
+  server.on("/updateTime",  handleUpdateTime);
+  server.on("/setTimer",    handleSetTimer);
   server.on("/readVoltage", handleReadVoltage);
-  server.on("/readTime", handleReadTime);
-  server.on("/open", handleOpenNow);
-  server.on("/close", handleCloseNow);
-  server.on("/done", handleDone);
+  server.on("/readTime",    handleReadTime);
+  server.on("/open",        handleOpenNow);
+  server.on("/close",       handleCloseNow);
+  server.on("/done",        handleDone);
+
   server.onNotFound(handleNotFound);
+
   server.begin();
 
   Serial.println("HTTP server started");
 
-  while (setupMode) {
+  long int startTime = millis();
+  bool timeoutPassed = false;
+  while (setupMode && !timeoutPassed) {
     dnsServer.processNextRequest();
     server.handleClient();
+    if (millis() - startTime > SERVER_TIMEOUT * 1000) {
+      timeoutPassed = true;
+    }
   }
 }
 
