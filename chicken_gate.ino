@@ -38,6 +38,7 @@ void setup () {
   }
 
   // Check if button is long pressed. If so, start the captive portal
+  delay(500);
   if (digitalRead(BUTTON_PIN) == HIGH) {
     delay(1500);
     if (digitalRead(BUTTON_PIN) == HIGH) {

@@ -12,7 +12,7 @@
 #define SPEED       8
 
 // Number of steps required to fully open or close gate
-#define STEPS_COUNT 8300
+#define STEPS_COUNT 8800
 
 Stepper stepper = Stepper(ONE_TURN, STEPPER_PIN_1, STEPPER_PIN_2, STEPPER_PIN_3, STEPPER_PIN_4);
 
