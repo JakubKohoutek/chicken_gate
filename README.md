@@ -67,7 +67,3 @@ up the gate.
 ![Open Gate](./images/open_gate.jpg)
 ![Closed Gate](./images/closed_gate.jpg)
 To see the video of working device, check out the [video on YouTube](https://youtu.be/cAucfu40Rm4).
-
-## TODO
-
-* Add stl files for printed parts
