@@ -70,5 +70,4 @@ To see the video of working device, check out the [video on YouTube](https://you
 
 ## TODO
 
-* Update circuit diagram
 * Add stl files for printed parts
