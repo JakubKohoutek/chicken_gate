@@ -33,7 +33,21 @@ synchronize time or set a different timer for opening/closing the gate.
 DS3231 is a great real time clock chip, but the standard module drains too much power for
 use in low power device running on battery. Fortunately it is possible to lower the power
 consumption to just a few micro amps when making a few small adjustments described in
-[this video](https://youtu.be/rG50U6bQhYo)
+[this video](https://youtu.be/rG50U6bQhYo).
+
+Namely, I made these adjustments:
+- removed the 1k resistor to disable the power indicator LED
+- bypassed the 200 ohm resistor from the "battery charging" circuit
+- cut the trace from the + terminal of the battery to the VBAT pin of the chip
+- added a 1N4148 diode from the + terminal of the battery to the VBAT pin of the chip
+- added 1uF and 0.1uF decoupling capacitors between VBAT and GND
+- lift up (or cut) the VCC pin of the DS3231 so that it doesn't connect to the board
+
+This is how the board looks after the mods:
+
+![Modified DS3231 board](./images/modified_ds3231.jpg)
+
+Library I used to communicate with the module is available [here](https://github.com/Makuna/Rtc)
 
 ### ESP Microcontroller and Circuit
 

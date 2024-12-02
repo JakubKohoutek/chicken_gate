@@ -49,6 +49,7 @@ void setup () {
   }
 
   // If button is not long pressed, open or close the gate based on its state
+  // writeToMemory(STATE_ADDRESS, OPEN); // Only run this once to initiate the memory
   unsigned long gateStatus = readFromMemory(STATE_ADDRESS);
 
   if (gateStatus == CLOSE) {
