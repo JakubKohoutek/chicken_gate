@@ -22,12 +22,12 @@ void powerUpMotor () {
   pinMode(STEPPER_PIN_3, OUTPUT);
   pinMode(STEPPER_PIN_4, OUTPUT);
   pinMode(MOTOR_POWER_PIN, OUTPUT);
-  digitalWrite(MOTOR_POWER_PIN, HIGH);
+  digitalWrite(MOTOR_POWER_PIN, LOW);
   stepper.setSpeed(SPEED);
 };
 
 void powerDownMotor () {
-  digitalWrite(MOTOR_POWER_PIN, LOW);
+  digitalWrite(MOTOR_POWER_PIN, HIGH);
   pinMode(STEPPER_PIN_1, INPUT);
   pinMode(STEPPER_PIN_2, INPUT);
   pinMode(STEPPER_PIN_3, INPUT);
